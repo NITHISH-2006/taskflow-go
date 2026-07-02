@@ -5,21 +5,22 @@ import (
 	"net/http"
 
 	"github.com/NITHISH-2006/taskflow-go/internal/handler"
+	"github.com/NITHISH-2006/taskflow-go/internal/middleware"
 	"github.com/NITHISH-2006/taskflow-go/internal/repository"
 	"github.com/NITHISH-2006/taskflow-go/internal/service"
 )
 
 func main() {
 	repo := repository.NewInMemoryTaskRepository()
-	service := service.NewTaskService(repo)
-	handler := handler.NewTaskHandler(service)
+	taskService := service.NewTaskService(repo)
+	taskHandler := handler.NewTaskHandler(taskService)
 
 	mux := http.NewServeMux()
-	handler.RegisterRoutes(mux)
+	taskHandler.RegisterRoutes(mux)
 
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: mux,
+		Handler: middleware.RequestLogger(mux),
 	}
 
 	log.Println("starting TaskFlow API on :8080")

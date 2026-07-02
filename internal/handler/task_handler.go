@@ -185,7 +185,8 @@ func parseTaskFilter(r *http.Request) (model.TaskFilter, error) {
 }
 
 func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) error {
-	if r.Header.Get("Content-Type") != "application/json" {
+	contentType := strings.ToLower(r.Header.Get("Content-Type"))
+	if !strings.HasPrefix(contentType, "application/json") {
 		return errors.New("content type must be application/json")
 	}
 
