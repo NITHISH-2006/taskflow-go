@@ -1,0 +1,23 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Editor directories
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
