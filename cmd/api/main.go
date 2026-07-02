@@ -1,18 +1,21 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/NITHISH-2006/taskflow-go/internal/handler"
+	"github.com/NITHISH-2006/taskflow-go/internal/repository"
+	"github.com/NITHISH-2006/taskflow-go/internal/service"
 )
 
-type healthResponse struct {
-	Status string `json:"status"`
-}
-
 func main() {
+	repo := repository.NewInMemoryTaskRepository()
+	service := service.NewTaskService(repo)
+	handler := handler.NewTaskHandler(service)
+
 	mux := http.NewServeMux()
-	mux.HandleFunc("/health", healthHandler)
+	handler.RegisterRoutes(mux)
 
 	server := &http.Server{
 		Addr:    ":8080",
@@ -23,16 +26,4 @@ func main() {
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("server failed: %v", err)
 	}
-}
-
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "method not allowed"})
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(healthResponse{Status: "ok"})
 }
