@@ -37,3 +37,7 @@ Validation utilities cover:
 - priority bounds between 1 and 5
 - allowed status values
 - RFC3339 timestamp parsing
+
+## Repository layer
+
+The project uses a thread-safe in-memory repository backed by `map[string]Task` and `sync.RWMutex`. It supports create, read, update, delete, and filtered task retrieval.
